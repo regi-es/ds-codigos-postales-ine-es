@@ -5,7 +5,7 @@ name: Refresh data
 # INE publishes twice a year; checking monthly picks new editions up promptly.
 on:
   schedule:
-    - cron: '0 4 3 * *' # 04:00 UTC on the 3rd of each month
+    - cron: '0 4 1 * *' # 04:00 UTC on the 1st of each month
   workflow_dispatch:
 
 permissions:
