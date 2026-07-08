@@ -1,0 +1,11 @@
+{
+  "fuentes": {
+    "callejero": "https://www.ine.es/prodyser/callejero/caj_esp/caj_esp_012026.zip",
+    "diccionario": "https://www.ine.es/daco/daco42/codmun/diccionario26.xlsx"
+  },
+  "edicion_callejero": "2026-01",
+  "edicion_diccionario": "2026",
+  "municipios": 8132,
+  "codigos_postales": 10794,
+  "pares": 13976
+}

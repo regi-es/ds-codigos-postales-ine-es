@@ -1,0 +1,42 @@
+name: Refresh data
+
+# Regenerates the dataset from the INE sources and commits the result when it
+# changed, tagging the commit with the callejero edition (e.g. 2026-01). The
+# INE publishes twice a year; checking monthly picks new editions up promptly.
+on:
+  schedule:
+    - cron: '0 4 3 * *' # 04:00 UTC on the 3rd of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Regenerate data
+        run: node scripts/generate.mjs
+
+      - name: Commit and tag on changes
+        run: |
+          if [ -z "$(git status --porcelain data)" ]; then
+            echo "Data unchanged; nothing to commit."
+            exit 0
+          fi
+          EDITION="$(node -p "require('./data/metadata.json').edicion_callejero")"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git commit -m "chore: refresh data (callejero $EDITION)"
+          # The edition tag tracks the latest data for that edition, so it
+          # moves if a re-run of the same edition changes anything.
+          git tag -f "$EDITION"
+          git push
+          git push -f origin "$EDITION"
